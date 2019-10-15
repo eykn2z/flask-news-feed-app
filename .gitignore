@@ -1,0 +1,6 @@
+dev.code-workspace
+Pipfile
+Pipfile.lock
+__pycache__
+memo_todo.md
+memo.md

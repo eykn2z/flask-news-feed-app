@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+<form action="{{url_for('add_website')}}" method=post class=add-entry>
+    <div class="form-group">
+        <label for="InputText">URL</label>
+        <input id="InputText" style="width:20em;" name="url">
+        <button class="btn waves-effect waves-light btn-small" type="submit" name="action">Submit
+                <i class="material-icons right">send</i>
+        </button>
+    </div>
+</form>
+<small>※RSSは会社によって書かれ方が違い、どのURLが取ってこられるものか判別するのに要調査<br>
+        （同じ仕様でも、違う意図の値が入っていたりする）</small>
+{% endblock %}

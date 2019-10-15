@@ -1,0 +1,54 @@
+<!doctype html>
+<HTML>
+
+<HEAD>
+    <title>matome no matome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <script type="text/javascript" src="{{url_for('static',filename='script.js')}}"></script>
+</HEAD>
+
+<BODY>
+
+  <div class="container z-depth-3">
+
+    <div class="header">
+
+      <a class="siteTitle" href="{{url_for('index')}}"><i class="material-icons large">rss_feed</i></a>
+      <ul class="menu right">
+        
+        {% if not session.logged_in %}
+        <li><a href="{{url_for('login')}}">Login</a></li>
+        {% else %}
+        <li><a href="{{url_for('show_new')}}">Add URL</a></li>
+        <li>
+          <form action="{{url_for('get_entry')}}" method="post">
+            <a href="javascript:void(0)" onclick="this.parentNode.submit()">Get Data</a>
+          </form>
+        </li>
+        <li><a href="{{url_for('logout')}}">Logout</a></li> 
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="body">
+      {% for message in get_flashed_messages() %}
+        <div class='alert alert-info' role='alert'>
+            {{ message }}
+        </div>
+      {% endfor %}
+        
+      {% block body %}{% endblock %}
+    </div>
+
+    <div class="footer">       
+    </div>
+  </div>
+
+</BODY>
+</HTML>

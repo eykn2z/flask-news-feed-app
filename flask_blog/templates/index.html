@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul class="collection left-align websites-collection">
+    {% for website in websites %}
+        <!-- <li class="collection-item"> -->
+            <span class="author"><a href="{{website.feedurl}}">{{website.name}}</a></span>
+        <!-- </li> -->
+    {% else %}
+    まだURLの登録がありません
+    {% endfor %}
+</ul>
+
+<ul class="collection left-align entries-collection">
+{% for entry in entries.items %}
+    <li class="collection-item">
+            <span class="text"><a href="{{entry.url}}">{{entry.title}}</a></span>
+            <div class="mini-info float-right"><span class="author"><a href="/">{{entry.sitename}}</a></span><span class="update">{{entry.updated.year}}/{{entry.updated.month}}/{{entry.updated.day}} {{entry.updated.hour}}:{{entry.updated.minute}}</span></div>
+    </li>
+{% else %}
+投稿がありません
+{% endfor %}
+</ul>
+
+<ul class="pagination">
+{% for page_num in entries.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}  
+  {% if page_num %}  
+    {% if entries.page == page_num %}  
+      <li class="waves-effect active"><a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a></li> 
+    {% else %}  
+    <li class="waves-effect"><a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a></li>  
+    {% endif %}  
+  {% else %}  
+    ...  
+  {% endif %}  
+{% endfor %} 
+</ul>
+{% endblock %}

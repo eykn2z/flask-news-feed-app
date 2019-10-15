@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+<form action="{{url_for('login')}}"method="post">
+    <div class="form-group">
+        <label>User Name</label>
+        <input type="text"name="username" style="width:15em;">
+    </div>
+    
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password"name="password" style="width:15em;">
+    </div>
+
+    <button class="btn waves-effect waves-light btn-small" type="submit" name="action">Login
+            <i class="material-icons right">send</i>
+    </button>
+</form>
+{% endblock %}
