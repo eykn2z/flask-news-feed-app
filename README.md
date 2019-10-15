@@ -1,5 +1,5 @@
 # flask-news-feed-app
-## overview
+https://fast-reef-34795.herokuapp.com/
 
 ログイン後の機能
 - RSSの追加
@@ -7,7 +7,7 @@
 
 id : John
 password : Lemon
-## how to run
+
 ```python
 pipenv shell
 pipenv install -r requirements.txt
