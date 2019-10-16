@@ -52,6 +52,7 @@ body{
     border-right:none;
 }
 
+
 .footer{
     font-size: 120%;
     text-align:center;
@@ -60,10 +61,15 @@ body{
 .author{
     margin-right:1em;
 }
+
+.collection-text{
+    display:inline-block;
+}
 .mini-info{
     display:flex;
     float:right;
     padding-bottom:0.5em;
+    vertical-align: bottom;
 }
 
 .siteTitle,.siteTitle a{

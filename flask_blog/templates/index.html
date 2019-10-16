@@ -13,9 +13,13 @@
 
 <ul class="collection left-align entries-collection">
 {% for entry in entries.items %}
-    <li class="collection-item">
-            <span class="text"><a href="{{entry.url}}">{{entry.title}}</a></span>
-            <div class="mini-info float-right"><span class="author"><a href="/">{{entry.sitename}}</a></span><span class="update">{{entry.updated.year}}/{{entry.updated.month}}/{{entry.updated.day}} {{entry.updated.hour}}:{{entry.updated.minute}}</span></div>
+    <li class="collection-item"style="padding-bottom:19px;">
+        <span style="display:inline-block;"><a href="{{entry.url}}" class="text">{{entry.title}}</a></span>
+        <span class="mini-info">
+          <a href="{{entry.siteurl}}" class="author">{{entry.sitename}}</a>
+          <span class="update">{{entry.updated.year}}/{{entry.updated.month}}/{{entry.updated.day}} {{entry.updated.hour}}:{{entry.updated.minute}}</span>
+        </span>
+      <!-- </p> -->
     </li>
 {% else %}
 投稿がありません
