@@ -1,14 +1,16 @@
 from flask import request,redirect,url_for,render_template,flash,session
-from flask_blog import app,db,WebSite,Entry,get_feed
+from flask_blog import app,db
+from flask_blog.models import WebSite,Entry
+from flask_blog.utils import get_feed
 from flask_sqlalchemy import Pagination
-from flask_blog.views.views import login_required
+from flask_blog.views.auth_view import login_required
 
 #Show entries
 @app.route('/', defaults={'page': 1})
 @app.route('/entry/<int:page>')
 def index(page):
     websites=WebSite.query.all()
-    entries = Entry.query.order_by(Entry.updated.desc()).paginate(page,per_page=10)
+    entries = Entry.query.order_by(Entry.updated_at.desc()).paginate(page,per_page=10)
     return render_template('index.html',websites=websites,entries=entries)
 
 

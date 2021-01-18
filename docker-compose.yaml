@@ -8,4 +8,6 @@ services:
       - "5000:5000"
     environment:
       - port=6000
+      - FLASK_APP=run.py
+      - FLASK_ENV=deployment
     # env_file: .env
