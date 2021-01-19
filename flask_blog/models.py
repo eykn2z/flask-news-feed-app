@@ -1,13 +1,15 @@
-import feedparser
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, String, DateTime, text, Integer
-from sqlalchemy.sql.functions import current_timestamp
-from flask_blog import db
 from datetime import datetime
-from flask_blog import app
 
-Engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],encoding="utf-8",echo=False)
+from sqlalchemy import Column, DateTime, Integer, String, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+
+from flask_blog import app, db
+
+Engine = create_engine(
+    app.config["SQLALCHEMY_DATABASE_URI"], encoding="utf-8", echo=False
+)
 Base = declarative_base()
+
 
 class BaseModel:
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -47,6 +49,7 @@ class WebSite(db.Model, BaseModel):
             self.id, self.name, self.siteurl, self.feedurl, self.updated_at
         )
 
+
 class Entry(db.Model, BaseModel):
     __tablename__ = "entry"
     title = Column(String(50), unique=True, nullable=False)
@@ -63,6 +66,3 @@ class Entry(db.Model, BaseModel):
         return "<Entry id:{} title:{} url:{} sitename:{}>".format(
             self.id, self.title, self.url, self.sitename
         )
-
-
-

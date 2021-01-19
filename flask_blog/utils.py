@@ -1,10 +1,25 @@
-from flask_blog.models import *
+from datetime import datetime
+from typing import Union
+
+import feedparser
+
+from flask_blog.models import Entry, WebSite
 
 feedMaxCount = 3
 
-def get_feed(website: WebSite) -> WebSite:
+
+def get_feed(website: WebSite) -> Union[list, None]:
+    """feedから現在月のデータを取得、entry listを返す
+
+    Args:
+        website (WebSite): [description]
+
+    Returns:
+        Union[list,None]: [description]
+    """
     f = feedparser.parse(website.feedurl)
-    if f.feed.get("updated_parsed", None) == None:
+    # 最新データが取得済データと同じ場合空を返す
+    if f.feed.get("updated_parsed", None) is None:
         return
     if (
         website.updated_at == time_to_datetime(f.feed.updated_parsed)
@@ -16,9 +31,39 @@ def get_feed(website: WebSite) -> WebSite:
         if n > feedMaxCount:
             break
         entries.append(
-            Entry(entry.title, entry.link, website.name, str_to_datetime(entry.updated))
+            Entry(
+                entry.title, entry.link, website.name, str_to_datetime(entry.updated_at)
+            )
         )
     return entries
+
+
+# def get_feed(website: WebSite) -> list:
+#     """feedから最新データを取得、entry listを返す
+
+#     Args:
+#         website (WebSite): [description]
+
+#     Returns:
+#         list: [description]
+#     """
+#     f = feedparser.parse(website.feedurl)
+#     # 最新データが取得済データと同じ場合空を返す
+#     if f.feed.get("updated_parsed", None) == None:
+#         return []
+#     if (
+#         website.updated_at == time_to_datetime(f.feed.updated_parsed)
+#         and Entry.query.filter_by(sitename=website.name).first() is not None
+#     ):
+#         return []
+#     entries = []
+#     for n, entry in enumerate(f.entries):
+#         if n > feedMaxCount:
+#             break
+#         entries.append(
+#             Entry(entry.title, entry.link, website.name, str_to_datetime(entry.updated))
+#         )
+#     return entries
 
 
 def time_to_datetime(time):
@@ -37,8 +82,9 @@ def str_to_datetime(strtime: str) -> datetime:
         datetime: [description]
     """
     import re
+
     try:
-        dt = datetime.strptime(strtime,"%a, %d %b %Y %H:%M:%S %z")
+        dt = datetime.strptime(strtime, "%a, %d %b %Y %H:%M:%S %z")
     except:
         day, time, _ = re.split("[T|+]", strtime)
         year, mon, mday = map(int, day.split("-"))
@@ -53,4 +99,6 @@ def get_day_of_week(dt: datetime) -> datetime:
 
 
 def datetime_to_str(dt: datetime) -> datetime:
-    return r"{}/{}/{}({}) {}:{}".format(dt.year, dt.month, dt.day, get_day_of_week(dt), dt.hour, dt.minute)
+    return r"{}/{}/{}({}) {}:{}".format(
+        dt.year, dt.month, dt.day, get_day_of_week(dt), dt.hour, dt.minute
+    )

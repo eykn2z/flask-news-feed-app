@@ -1,10 +1,10 @@
 import os
-from os.path import join, dirname
-
-from flask import request, redirect, url_for, render_template, flash, session
-from flask.json import jsonify
 from functools import wraps
+from os.path import dirname, join
+
 from dotenv import load_dotenv
+from flask import flash, redirect, render_template, request, session, url_for
+from flask.json import jsonify
 from requests_oauthlib import OAuth2Session
 
 from flask_blog import app, db
@@ -20,13 +20,15 @@ def login_required(func):
 
     return wrapper
 
-dotenv_path = join(dirname(__file__), '.env')
+
+dotenv_path = join(dirname(__file__), ".env")
 load_dotenv(dotenv_path)
 # This information is obtained upon registration of a new GitHub
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 authorization_base_url = "https://github.com/login/oauth/authorize"
 token_url = "https://github.com/login/oauth/access_token"
+
 
 @app.route("/login")
 def login():
@@ -45,18 +47,18 @@ def callback():
         token_url, client_secret=client_secret, authorization_response=request.url
     )
     # return jsonify(github.get('https://api.github.com/user').json())
-    user_info = github.get('https://api.github.com/user').json()
+    user_info = github.get("https://api.github.com/user").json()
     session["oauth_token"] = token
     subid: str = "github_{}".format(user_info["id"])
-    if not User.query.filter(User.subid==subid).all():
-        user = User(subid=subid,name=user_info["login"])
+    if not User.query.filter(User.subid == subid).all():
+        user = User(subid=subid, name=user_info["login"])
         db.session.add(user)
         db.session.commit()
         db.session.close()
         flash(f'ユーザー：{user_info["login"]}が追加されました。')
-    session['logged_in']=True
-    flash('ログインしました')
-    return redirect(url_for('index'))
+    session["logged_in"] = True
+    flash("ログインしました")
+    return redirect(url_for("index"))
     # return redirect(url_for(".profile"))
 
 

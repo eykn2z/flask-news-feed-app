@@ -1,14 +1,13 @@
+import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-import sys
-sys.path = ['', '..'] + sys.path[1:]
-from flask_blog.models import Engine
+sys.path = ["", ".."] + sys.path[1:]
 from flask_blog import db
+from flask_blog.models import Engine
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -75,13 +74,11 @@ def run_migrations_online():
     #     with context.begin_transaction():
     #         context.run_migrations()
     engine = engine_from_config(
-                config.get_section(config.config_ini_section), prefix='sqlalchemy.')
+        config.get_section(config.config_ini_section), prefix="sqlalchemy."
+    )
 
     with engine.connect() as connection:
-        context.configure(
-                    connection=connection,
-                    target_metadata=target_metadata
-                    )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

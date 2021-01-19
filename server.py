@@ -1,6 +1,7 @@
-from flask_blog import app
 import os
 import ssl
+
+from flask_blog import app
 
 port = int(os.environ.get("port")) if os.environ.get("port") else 5000
 
