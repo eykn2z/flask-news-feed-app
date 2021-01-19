@@ -36,9 +36,8 @@ def add_website():
         flash("新しくウェブサイトが追加されました")
     except Exception as e:
         import traceback
-
         traceback.print_exc()
-        flash(f"追加エラー:{e.message}")
+        flash(f"追加エラー:{e.args[0]}")
     finally:
         return redirect(url_for("index"))
 

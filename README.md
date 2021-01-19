@@ -1,20 +1,16 @@
 # flask-news-feed-app
+
 https://fast-reef-34795.herokuapp.com/
 
 ログイン後の機能
-- RSSの追加
+
+- RSS の追加
 - データ更新
 
 id : John
 password : Lemon
 
 ```python
-pipenv shell
-pipenv install -r requirements.txt
-# set PATH+=chromedriver-path
-python run.py
+docker-compose up -d
+https://127.0.0.1:5000/
 ```
-
-
-
-
