@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_blog import app, db
 from flask_blog.models import Entry, WebSite
-from flask_blog.utils import create_entries
+from flask_blog.utils import create_entries, get_feedurl
 from flask_blog.views.auth_view import login_required
 
 
@@ -27,15 +27,18 @@ def show_new():
 @app.route("/websites", methods=["POST"])
 def add_website():
     try:
-        website = WebSite(url=request.form["url"])
+        feedurl = get_feedurl(request.form["url"])
+        if not feedurl:
+            raise Exception("urlの中にfeed urlがありませんでした。")
+        website = WebSite(url=feedurl)
         db.session.add(website)
         db.session.commit()
         flash("新しくウェブサイトが追加されました")
-    except Exception:
+    except Exception as e:
         import traceback
 
         traceback.print_exc()
-        flash("追加エラー")
+        flash(f"追加エラー:{e.message}")
     finally:
         return redirect(url_for("index"))
 
@@ -45,6 +48,7 @@ def add_website():
 @app.route("/entries", methods=["POST"])
 def get_entry():
     websites = WebSite.query.all()
-    create_entries(websites)
+    for website in websites:
+        create_entries(website)
 
     return redirect(url_for("index"))
