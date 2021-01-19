@@ -70,10 +70,10 @@ class Entry(Base):
     website_id = db.Column(db.Integer, db.ForeignKey('website.id', ondelete='CASCADE'), nullable=False)
     website = db.relationship('WebSite', backref=db.backref('entries', lazy=True))
 
-    def __init__(self, title, url, sitename, updated_at):
+    def __init__(self, title, url, website_id, updated_at):
         self.title = title
         self.url = url
-        self.sitename = sitename
+        self.website_id = website_id
         self.updated_at = updated_at
 
     def __repr__(self):

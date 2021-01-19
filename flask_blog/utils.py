@@ -33,8 +33,8 @@ def get_feed_of_month(website: WebSite) -> Union[list, None]:
         else:
             if feedentry["published_parsed"].tm_mon != month:
                 break
-        entry = Entry(feedentry.title, feedentry.link, website.name, datetime(*feedentry["published_parsed"][:6]))
-        if not Entry.query.filter(Entry.title == feedentry.title, Entry.sitename == website.name).first():
+        entry = Entry(feedentry.title, feedentry.link, website.id, datetime(*feedentry["published_parsed"][:6]))
+        if not Entry.query.filter(Entry.title == feedentry.title, Entry.website.name == website.name).first():
             return None, None
         entries.append(entry)
     dt = time_to_datetime(f.entries[0]["published_parsed"])
