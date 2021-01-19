@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import feedparser
 from sqlalchemy import Column, DateTime, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -38,7 +39,6 @@ class WebSite(db.Model, BaseModel):
             return
         if ("atom" not in f.version) and ("rss" not in f.version):
             return
-        feed = f.feed
         self.name = f.feed.title
         self.siteurl = f.feed.get("id", None)
         self.feedurl = f.feed.get("title_detail.base", url)

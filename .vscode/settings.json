@@ -8,15 +8,15 @@
         }
     ],
     "sqltools.useNodeRuntime": true,
-    "python.formatting.provider": "black", // フォーマッターをblackに設定
-    "python.linting.pylintEnabled": false, //　pyLintをオフに
-    "python.linting.flake8Enabled": true, // flake8をオンに
-    "python.linting.enabled": true, // リンターを有効に
-    "python.linting.lintOnSave": true, // 保存時にリンターが効くように
-    "editor.formatOnSave": true, // 保存時にフォーマットをオンに
-    "editor.formatOnType": true, // タイピング時にフォーマットをオンに
-    "editor.formatOnPaste": false, // 貼り付け時のフォーマットはオフに
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    },
+    "python.formatting.provider": "black",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": false,
+    // "editor.codeActionsOnSave": {
+    //     "source.organizeImports": true
+    // },
 }

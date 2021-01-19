@@ -1,9 +1,8 @@
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_blog import app, db
 from flask_blog.models import Entry, WebSite
 from flask_blog.utils import get_feed
 from flask_blog.views.auth_view import login_required
-from flask_sqlalchemy import Pagination
 
 
 # Show entries
@@ -32,7 +31,7 @@ def add_website():
         db.session.add(website)
         db.session.commit()
         flash("新しくウェブサイトが追加されました")
-    except:
+    except Exception:
         import traceback
 
         traceback.print_exc()
@@ -49,13 +48,13 @@ def get_entry():
     gf_list = [get_feed(website) for website in websites]
     w_names = [website.name for website in websites]
     for entries, wname in zip(gf_list, w_names):
-        if entries != None:
+        if entries is not None:
             for entry in entries:
                 db.session.add(entry)
                 try:
                     db.session.commit()
                     flash("{}の記事が１件追加されました".format(wname))
-                except:
+                except Exception:
                     db.session.close()
         else:
             flash("{}の記事は追加されませんでした".format(wname))
