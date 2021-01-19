@@ -1,13 +1,13 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_blog import app, db
 from flask_blog.models import Entry, WebSite
-from flask_blog.utils import get_feed
+from flask_blog.utils import create_entries
 from flask_blog.views.auth_view import login_required
 
 
 # Show entries
 @app.route("/", defaults={"page": 1})
-@app.route("/entries", methods=["GET"])
+@app.route("/entries", methods=["GET"], defaults={"page": 1})
 @app.route("/entry/<int:page>")
 def index(page):
     websites = WebSite.query.all()
@@ -45,18 +45,6 @@ def add_website():
 @app.route("/entries", methods=["POST"])
 def get_entry():
     websites = WebSite.query.all()
-    gf_list = [get_feed(website) for website in websites]
-    w_names = [website.name for website in websites]
-    for entries, wname in zip(gf_list, w_names):
-        if entries is not None:
-            for entry in entries:
-                db.session.add(entry)
-                try:
-                    db.session.commit()
-                    flash("{}の記事が１件追加されました".format(wname))
-                except Exception:
-                    db.session.close()
-        else:
-            flash("{}の記事は追加されませんでした".format(wname))
-            db.session.close()
+    create_entries(websites)
+
     return redirect(url_for("index"))

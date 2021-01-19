@@ -2,7 +2,9 @@ from datetime import datetime
 from typing import Union
 
 import feedparser
+from flask import flash
 
+from flask_blog import db
 from flask_blog.models import Entry, WebSite
 
 feedMaxCount = 3
@@ -21,22 +23,38 @@ def get_feed(website: WebSite) -> Union[list, None]:
     # 最新データが取得済データと同じ場合空を返す
     if f.feed.get("updated_parsed", None) is None:
         return
-    if (
-        website.updated_at == time_to_datetime(f.feed.updated_parsed)
-        and Entry.query.filter_by(sitename=website.name).first() is not None
-    ):
+    if (website.updated_at == time_to_datetime(f.feed.updated_parsed) and Entry.query.filter_by(sitename=website.name).first() is not None):
         return
     entries = []
+    month = None
     for n, entry in enumerate(f.entries):
-        if n > feedMaxCount:
-            break
+        if n == 0:
+            month = entry["published_parsed"].tm_mon
+        else:
+            if entry["published_parsed"].tm_mon != month:
+                break
         entries.append(
             Entry(
-                entry.title, entry.link, website.name, str_to_datetime(entry.updated_at)
+                entry.title, entry.link, website.name, datetime(*entry["published_parsed"][:6])
             )
         )
     return entries
 
+
+def create_entries(websites: list[WebSite]) -> None:
+    for website in websites:
+        entries = get_feed(website)
+        if not entries:
+            continue
+        try:
+            db.session.add_all(entries)
+            db.session.commit()
+            flash(f"{website.nme}の記事が{len(entries)}件追加されました")
+        except Exception:
+            db.session.close()
+        else:
+            flash(f"{website.name}の記事は追加されませんでした")
+            db.session.close()
 
 # def get_feed(website: WebSite) -> list:
 #     """feedから最新データを取得、entry listを返す
@@ -72,7 +90,7 @@ def time_to_datetime(time):
 
 
 def str_to_datetime(strtime: str) -> datetime:
-    """[summary]
+    """文字列時刻をdatetimeに変換
     Fri, 08 Jan 2021 11:00:00 +0900
 
     Args:
@@ -85,7 +103,7 @@ def str_to_datetime(strtime: str) -> datetime:
 
     try:
         dt = datetime.strptime(strtime, "%a, %d %b %Y %H:%M:%S %z")
-    except:
+    except Exception:
         day, time, _ = re.split("[T|+]", strtime)
         year, mon, mday = map(int, day.split("-"))
         hour, min, sec = map(int, time.split(":"))

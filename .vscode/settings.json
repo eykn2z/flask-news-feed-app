@@ -8,15 +8,21 @@
         }
     ],
     "sqltools.useNodeRuntime": true,
-    "python.formatting.provider": "black",
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true,
-    "python.linting.lintOnSave": true,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "editor.formatOnPaste": false,
-    // "editor.codeActionsOnSave": {
-    //     "source.organizeImports": true
-    // },
+    "python.linting.enabled": true,             // 文法チェックを行う
+    "python.linting.pylintEnabled": false,      // pylint は使わない
+    "python.linting.flake8Enabled": true,       // 文法チェックにflake8 を使う
+    "python.linting.flake8Args": [              // flake8 の設定
+      "--ignore=E111, E114, E402, E501"
+    ],
+    "python.formatting.provider": "autopep8",   // 自動整形に autopep8 を使う
+    "python.formatting.autopep8Args": [         // autopep8 の設定
+      "--indent-size=2",
+      "--ignore=E111, E114, E402, E501"
+    ],
+    "[python]": {
+      "editor.tabSize": 2,                      // インデントレベルは「2」
+      "editor.formatOnSave": true,              // 保存時に自動整形を行う
+      "editor.formatOnPaste": false,            // ペースト時に自動整形を行わない
+      "editor.formatOnType": true,             // 入力後に自動整形を行わない
+    },
 }
