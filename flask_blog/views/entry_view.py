@@ -7,6 +7,7 @@ from flask_blog.views.auth_view import login_required
 
 #Show entries
 @app.route('/', defaults={'page': 1})
+@app.route('/entries', methods=['GET'])
 @app.route('/entry/<int:page>')
 def index(page):
     websites=WebSite.query.all()

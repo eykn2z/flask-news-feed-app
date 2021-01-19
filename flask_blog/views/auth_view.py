@@ -1,6 +1,14 @@
+import os
+from os.path import join, dirname
+
 from flask import request, redirect, url_for, render_template, flash, session
-from flask_blog import app
+from flask.json import jsonify
 from functools import wraps
+from dotenv import load_dotenv
+from requests_oauthlib import OAuth2Session
+
+from flask_blog import app, db
+from flask_blog.models import User
 
 
 def login_required(func):
@@ -11,15 +19,6 @@ def login_required(func):
         return func(*args, **kargs)
 
     return wrapper
-
-
-from requests_oauthlib import OAuth2Session
-
-from flask import Flask, request, redirect, session, url_for
-from flask.json import jsonify
-import os
-from os.path import join, dirname
-from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -46,8 +45,19 @@ def callback():
         token_url, client_secret=client_secret, authorization_response=request.url
     )
     # return jsonify(github.get('https://api.github.com/user').json())
+    user_info = github.get('https://api.github.com/user').json()
     session["oauth_token"] = token
-    return redirect(url_for(".profile"))
+    subid: str = "github_{}".format(user_info["id"])
+    if not User.query.filter(User.subid==subid).all():
+        user = User(subid=subid,name=user_info["login"])
+        db.session.add(user)
+        db.session.commit()
+        db.session.close()
+        flash(f'ユーザー：{user_info["login"]}が追加されました。')
+    session['logged_in']=True
+    flash('ログインしました')
+    return redirect(url_for('index'))
+    # return redirect(url_for(".profile"))
 
 
 @app.route("/profile", methods=["GET"])

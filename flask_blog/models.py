@@ -9,22 +9,21 @@ from flask_blog import app
 Engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],encoding="utf-8",echo=False)
 Base = declarative_base()
 
-feedMaxCount = 3
-
 class BaseModel:
     id = Column(Integer, primary_key=True, autoincrement=True)
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
 
-class User(Base, db.Model, BaseModel):
+class User(db.Model, BaseModel):
     __tablename__ = "user"
+    subid = Column(String(50), unique=True)
     name = Column(String(50), unique=True, nullable=False)
 
 
-class WebSite(Base, db.Model, BaseModel):
+class WebSite(db.Model, BaseModel):
     __tablename__ = "website"
-    # name = Column(String(50), unique=True, nullable=False)
+    name = Column(String(50), unique=True, nullable=False)
     siteurl = Column(String(50))
     feedurl = Column(String(50), nullable=False)
 
@@ -48,8 +47,7 @@ class WebSite(Base, db.Model, BaseModel):
             self.id, self.name, self.siteurl, self.feedurl, self.updated_at
         )
 
-
-class Entry(Base, db.Model, BaseModel):
+class Entry(db.Model, BaseModel):
     __tablename__ = "entry"
     title = Column(String(50), unique=True, nullable=False)
     url = Column(String(50), nullable=False)

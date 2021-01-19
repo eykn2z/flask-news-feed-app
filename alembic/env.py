@@ -7,7 +7,8 @@ from alembic import context
 
 import sys
 sys.path = ['', '..'] + sys.path[1:]
-from flask_blog.models import Base, Engine
+from flask_blog.models import Engine
+from flask_blog import db
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -21,7 +22,7 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+target_metadata = db.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

@@ -1,11 +1,13 @@
 from flask_blog.models import *
 
+feedMaxCount = 3
+
 def get_feed(website: WebSite) -> WebSite:
     f = feedparser.parse(website.feedurl)
     if f.feed.get("updated_parsed", None) == None:
         return
     if (
-        website.updated == time_to_datetime(f.feed.updated_parsed)
+        website.updated_at == time_to_datetime(f.feed.updated_parsed)
         and Entry.query.filter_by(sitename=website.name).first() is not None
     ):
         return
@@ -24,13 +26,25 @@ def time_to_datetime(time):
     return datetime(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
 
 
-def str_to_datetime(strtime: str) -> str:
-    import re
+def str_to_datetime(strtime: str) -> datetime:
+    """[summary]
+    Fri, 08 Jan 2021 11:00:00 +0900
 
-    day, time, _ = re.split("[T|+]", strtime)
-    year, mon, mday = map(int, day.split("-"))
-    hour, min, sec = map(int, time.split(":"))
-    return datetime(year, mon, mday, hour, min, sec)
+    Args:
+        strtime (str): [description]
+
+    Returns:
+        datetime: [description]
+    """
+    import re
+    try:
+        dt = datetime.strptime(strtime,"%a, %d %b %Y %H:%M:%S %z")
+    except:
+        day, time, _ = re.split("[T|+]", strtime)
+        year, mon, mday = map(int, day.split("-"))
+        hour, min, sec = map(int, time.split(":"))
+        dt = datetime(year, mon, mday, hour, min, sec)
+    return dt
 
 
 def get_day_of_week(dt: datetime) -> datetime:
@@ -39,6 +53,4 @@ def get_day_of_week(dt: datetime) -> datetime:
 
 
 def datetime_to_str(dt: datetime) -> datetime:
-    return r"{}/{}/{}({}) {}:{}".format(
-        dt.year, dt.month, dt.day, get_day_of_week(dt), dt.hour, dt.minute
-    )
+    return r"{}/{}/{}({}) {}:{}".format(dt.year, dt.month, dt.day, get_day_of_week(dt), dt.hour, dt.minute)
