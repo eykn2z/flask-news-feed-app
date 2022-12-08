@@ -1,7 +1,7 @@
 alembic==1.4.3
 appdirs==1.4.4
 autoflake==1.4
-certifi==2020.12.5
+certifi==2022.12.7
 chardet==4.0.0
 click==7.1.2
 feedparser==6.0.2
